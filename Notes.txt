@@ -1,0 +1,59 @@
+//Splitting the reducers into multiple ones is common practice
+//It helps us finding cases into potentially a very long file
+//Because for the user's cases we'll have a seperate file 
+//Moreover, it will also simplify the reducers'logic
+//because now every reducer will be assigned to just a slice of the state
+//and it will have to maintain the return just it's assigned portion
+
+//combineReducers() imported from Redux
+
+const bigReducer = combineReducer({
+	cart: cartReducer, // cart as the key because cart is one of the sub objects of my state
+	user: userReducer, 
+})
+
+//add it to configureStore --bigReducer
+
+const cartReducer = (state = initialState.cart, action ) =>{...}
+
+//applyMiddleware and compose imported from redux
+//thunk from redux-thunk 
+
+export const addToCartActionWithThunk = (book) =>{
+	return (dispatch, getState) => {
+	// now we can return a FUNCTION out of your action creator, not just an object
+	//It means you can do a fetch , console log , after you compute the result you can dispatch
+	console.log(...)
+	dispatch({
+	type: ADD_TO_CART,
+	payload: book, 
+})
+}
+}
+
+//for example we could even do an async fetch here 
+//you can add conditions 
+
+//BookStore.jsx
+ componentDidMount = async () => {
+	//from here i will dispatchgetBooksAction
+	//so the network call will happen and the books for the stock array
+	//are going to be retrived
+	this.props.getBooks()	
+}
+
+//we will need both functionalities , read and write
+
+const mapStateToProps = state => ({
+	booksInStock : state.book.stock
+	//the array of books available for purchase
+	// books={this.props.booksInStock}
+}) 
+
+const mapDispatchToProps = dispatch => ({
+	getBooks: () => {
+	dispatch(getBooksAction())
+}
+})
+
+//thanks to redux-thunk we can inject logic into our actions 
